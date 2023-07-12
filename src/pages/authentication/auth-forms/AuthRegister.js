@@ -71,6 +71,7 @@ const AuthRegister = () => {
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
+            console.log(values);
             setStatus({ success: false });
             setSubmitting(false);
           } catch (err) {

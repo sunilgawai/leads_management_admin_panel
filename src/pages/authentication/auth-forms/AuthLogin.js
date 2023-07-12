@@ -42,16 +42,18 @@ const AuthLogin = () => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-
+  const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
   return (
     <>
       <Formik
         initialValues={{
+          phone: '7397973154',
           email: 'info@codedthemes.com',
           password: '123456',
           submit: null
         }}
         validationSchema={Yup.object().shape({
+          phone: Yup.string().min(10).max(10).matches(phoneRegExp, 'Phone number is not valid').required('Phone is required'),
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
           password: Yup.string().max(255).required('Password is required')
         })}
