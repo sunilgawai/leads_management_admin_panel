@@ -39,12 +39,13 @@ import { setAuth } from 'store/reducers/userSlice';
 const AuthLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { auth } = useSelector((state) => state.userSlice);
 
-  // React.useEffect(() => {
-  //   if (user) {
-  //     navigate('/');
-  //   }
-  // }, []);
+  React.useEffect(() => {
+    if (auth) {
+      navigate('/');
+    }
+  }, []);
 
 
   const [checked, setChecked] = React.useState(false);
@@ -57,7 +58,6 @@ const AuthLogin = () => {
     event.preventDefault();
   };
 
-  // const handleLogin = () => {};
 
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
   return (
@@ -78,9 +78,9 @@ const AuthLogin = () => {
           try {
             setSubmitting(true);
             ApiService.login({ email: values.email, phone: values.phone, password: values.password })
-              .then(res => {
-                console.log(res.data);
-                dispatch(setAuth({ auth: res.data }));
+              .then(({ data }) => {
+                console.log(data);
+                dispatch(setAuth({ data }));
                 navigate('/');
               }).catch(err => {
                 console.log(err);

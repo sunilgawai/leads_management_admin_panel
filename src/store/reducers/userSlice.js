@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 
 const initialState = {
-    isAuth: false,
+    isAuth: localStorage.getItem('auth') ? true : false,
     auth: localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : null,
 };
 
@@ -13,16 +13,25 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         setAuth: (state, action) => {
-            // Todo: Store user in auth.
-            // localStorage.setItem('auth', JSON.stringify(action.payload))
-            // state = {
-            //     ...state,
-            //     isAuth: true,
-            //     auth: action.payload
-            // }
+            const { data } = action.payload;
+            localStorage.setItem('auth', JSON.stringify(data));
+            state = {
+                isAuth: true,
+                auth: data
+            }
+            return state;
+        },
+        removeAuth: (state) => {
+            // Todo: Remove auth from state.
+            localStorage.removeItem('auth');
+            state = {
+                isAuth: false,
+                auth: null
+            }
+            return state;
         }
     }
 })
 
-export const { setAuth } = userSlice.actions;
+export const { setAuth, removeAuth } = userSlice.actions;
 export default userSlice.reducer;

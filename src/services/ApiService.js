@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import axios from "axios";
 
 class ApiService {
@@ -12,10 +13,22 @@ class ApiService {
 
     static login = ({ email, phone, password }) => {
         return new Promise((resolve, reject) => {
-            this.apiServer.post("/api/auth/login", {
+            this.apiServer.post('/api/auth/login', {
                 email,
                 phone,
                 password
+            }).then((response) => {
+                return resolve(response);
+            }).catch((error) => {
+                return reject(error);
+            })
+        })
+    }
+
+    static logout = ({ refreshToken }) => {
+        return new Promise((resolve, reject) => {
+            this.apiServer.post('/api/auth/logout', {
+                refreshToken
             }).then((response) => {
                 return resolve(response);
             }).catch((error) => {

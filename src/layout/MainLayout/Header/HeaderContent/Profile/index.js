@@ -51,13 +51,29 @@ function a11yProps(index) {
   };
 }
 
+// Logout Handler Import.
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { removeAuth } from 'store/reducers/userSlice';
+
 // ==============================|| HEADER CONTENT - PROFILE ||============================== //
 
 const Profile = () => {
   const theme = useTheme();
+  // const {
+  //   auth: { refresh_token }
+  // } = useSelector((state) => state.userSlice);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     // logout
+    // ApiService.logout({ refresh_token }).then((response) => {
+    //   console.log('logout response', response);
+    //   dispatch(removeAuth({}));
+    // });
+    dispatch(removeAuth({}));
+    navigate('/login');
   };
 
   const anchorRef = useRef(null);

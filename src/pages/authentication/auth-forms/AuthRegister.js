@@ -15,7 +15,9 @@ import {
   InputLabel,
   OutlinedInput,
   Stack,
-  Typography
+  Typography,
+  Select,
+  MenuItem
 } from '@mui/material';
 
 // third party
@@ -30,9 +32,21 @@ import { strengthColor, strengthIndicator } from 'utils/password-strength';
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
-// ============================|| FIREBASE - REGISTER ||============================ //
+// State Management Inputs.
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const AuthRegister = () => {
+  const navigate = useNavigate();
+  // const dispatch = useDispatch();
+  const { auth } = useSelector((state) => state.userSlice);
+
+  useEffect(() => {
+    if (auth) {
+      navigate('/');
+    }
+  }, []);
+
   const [level, setLevel] = useState();
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
@@ -58,16 +72,20 @@ const AuthRegister = () => {
         initialValues={{
           firstname: '',
           lastname: '',
+          phone: '',
           email: '',
-          company: '',
           password: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
           firstname: Yup.string().max(255).required('First Name is required'),
           lastname: Yup.string().max(255).required('Last Name is required'),
+          phone: Yup.string().max(12).required('Phone No. is required'),
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-          password: Yup.string().max(255).required('Password is required')
+          department: Yup.string().max(255).required('Department is required'),
+          // address: Yup.string().max(255).required('Address is required'),
+          password: Yup.string().max(255).required('Password is required'),
+          repeat_password: Yup.string().max(255).required('Password is required')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
@@ -128,23 +146,79 @@ const AuthRegister = () => {
                   )}
                 </Stack>
               </Grid>
-              <Grid item xs={12}>
+              {/* Department Selection  */}
+              <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="company-signup">Company</InputLabel>
-                  <OutlinedInput
+                  <InputLabel id="department-signup">Department</InputLabel>
+                  <Select
                     fullWidth
-                    error={Boolean(touched.company && errors.company)}
-                    id="company-signup"
-                    value={values.company}
-                    name="company"
+                    labelId="department-signup"
+                    id="department-signup"
+                    type="department"
+                    name="department"
+                    label="Department"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="Demo Inc."
+                    value={values.department}
+                    error={Boolean(touched.department && errors.department)}
+                  >
+                    <MenuItem value={10}>Account</MenuItem>
+                    <MenuItem value={20}>IT</MenuItem>
+                    <MenuItem value={30}>Purchase</MenuItem>
+                  </Select>
+                  {touched.department && errors.department && (
+                    <FormHelperText error id="helper-text-lastname-signup">
+                      {errors.department}
+                    </FormHelperText>
+                  )}
+                </Stack>
+              </Grid>
+              {/* end of select  */}
+              {/* Location Selection  */}
+              {/* <Grid item xs={12} md={6}>
+                <Stack spacing={1}>
+                  <InputLabel id="department-signup">Department</InputLabel>
+                  <Select
+                    fullWidth
+                    labelId="department-signup"
+                    id="department-signup"
+                    type="department"
+                    name="department"
+                    label="Department"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.department}
+                    error={Boolean(touched.department && errors.department)}
+                  >
+                    <MenuItem value={10}>Account</MenuItem>
+                    <MenuItem value={20}>IT</MenuItem>
+                    <MenuItem value={30}>Purchase</MenuItem>
+                  </Select>
+                  {touched.department && errors.department && (
+                    <FormHelperText error id="helper-text-lastname-signup">
+                      {errors.department}
+                    </FormHelperText>
+                  )}
+                </Stack>
+              </Grid> */}
+              {/* end of Location  */}
+              <Grid item xs={12}>
+                <Stack spacing={1}>
+                  <InputLabel htmlFor="phone-signup">Phone</InputLabel>
+                  <OutlinedInput
+                    fullWidth
+                    error={Boolean(touched.phone && errors.phone)}
+                    id="phone-signup"
+                    value={values.phone}
+                    name="phone"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    placeholder="Phone No."
                     inputProps={{}}
                   />
-                  {touched.company && errors.company && (
-                    <FormHelperText error id="helper-text-company-signup">
-                      {errors.company}
+                  {touched.phone && errors.phone && (
+                    <FormHelperText error id="helper-text-phone-signup">
+                      {errors.phone}
                     </FormHelperText>
                   )}
                 </Stack>
@@ -161,7 +235,7 @@ const AuthRegister = () => {
                     name="email"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="demo@company.com"
+                    placeholder="demo@phone.com"
                     inputProps={{}}
                   />
                   {touched.email && errors.email && (
@@ -220,6 +294,56 @@ const AuthRegister = () => {
                     </Grid>
                   </Grid>
                 </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <Stack spacing={1}>
+                  <InputLabel htmlFor="password-signup">Repeat Password</InputLabel>
+                  <OutlinedInput
+                    fullWidth
+                    error={Boolean(touched.repeat_password && errors.repeat_password)}
+                    id="repeat_password-signup"
+                    type={showPassword ? 'text' : 'password'}
+                    value={values.repeat_password}
+                    name="repeat_password"
+                    onBlur={handleBlur}
+                    onChange={(e) => {
+                      handleChange(e);
+                      changePassword(e.target.value);
+                    }}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                          size="large"
+                        >
+                          {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    placeholder="******"
+                    inputProps={{}}
+                  />
+                  {touched.repeat_password && errors.repeat_password && (
+                    <FormHelperText error id="helper-text-password-signup">
+                      {errors.repeat_password}
+                    </FormHelperText>
+                  )}
+                </Stack>
+                {/* <FormControl fullWidth sx={{ mt: 2 }}>
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item>
+                      <Box sx={{ bgcolor: level?.color, width: 85, height: 8, borderRadius: '7px' }} />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="subtitle1" fontSize="0.75rem">
+                        {level?.label}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </FormControl> */}
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="body2">
