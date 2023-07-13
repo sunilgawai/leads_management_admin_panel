@@ -1,5 +1,9 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-unused-vars */
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import ApiService from 'services/ApiService';
 
 // material-ui
 import {
@@ -28,12 +32,22 @@ import AnimateButton from 'components/@extended/AnimateButton';
 
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import { setAuth } from 'store/reducers/userSlice';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const AuthLogin = () => {
-  const [checked, setChecked] = React.useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  // React.useEffect(() => {
+  //   if (user) {
+  //     navigate('/');
+  //   }
+  // }, []);
+
+
+  const [checked, setChecked] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -42,14 +56,17 @@ const AuthLogin = () => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  // const handleLogin = () => {};
+
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
   return (
     <>
       <Formik
         initialValues={{
-          phone: '7397973154',
-          email: 'info@codedthemes.com',
-          password: '123456',
+          phone: '',
+          email: '',
+          password: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
@@ -59,7 +76,16 @@ const AuthLogin = () => {
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
-            setStatus({ success: false });
+            setSubmitting(true);
+            ApiService.login({ email: values.email, phone: values.phone, password: values.password })
+              .then(res => {
+                console.log(res.data);
+                dispatch(setAuth({ auth: res.data }));
+                navigate('/');
+              }).catch(err => {
+                console.log(err);
+              })
+            setStatus({ success: true });
             setSubmitting(false);
           } catch (err) {
             setStatus({ success: false });
@@ -88,6 +114,27 @@ const AuthLogin = () => {
                   {touched.email && errors.email && (
                     <FormHelperText error id="standard-weight-helper-text-email-login">
                       {errors.email}
+                    </FormHelperText>
+                  )}
+                </Stack>
+              </Grid>
+              <Grid item xs={12}>
+                <Stack spacing={1}>
+                  <InputLabel htmlFor="email-login">Phone No.</InputLabel>
+                  <OutlinedInput
+                    id="phone-login"
+                    type="text"
+                    value={values.phone}
+                    name="phone"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    placeholder="Enter phone number"
+                    fullWidth
+                    error={Boolean(touched.email && errors.email)}
+                  />
+                  {touched.phone && errors.phone && (
+                    <FormHelperText error id="standard-weight-helper-text-email-login">
+                      {errors.phone}
                     </FormHelperText>
                   )}
                 </Stack>
