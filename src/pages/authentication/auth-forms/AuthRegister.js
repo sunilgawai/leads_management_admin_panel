@@ -99,16 +99,16 @@ const AuthRegister = () => {
     <>
       <Formik
         initialValues={{
-          firstname: '',
-          lastname: '',
-          phone: '',
-          email: '',
+          firstname: 'John',
+          lastname: 'Doe',
+          phone: '1234567890',
+          email: 'johndoe69@gmail.com',
           department: '',
           country: '',
           state: '',
           city: '',
-          password: '',
-          repeat_password: '',
+          password: 'john@123',
+          repeat_password: 'john@123',
           submit: null
         }}
         validationSchema={Yup.object().shape({
@@ -221,7 +221,19 @@ const AuthRegister = () => {
                     name="country"
                     label="country"
                     onBlur={handleBlur}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      ApiService.getStates(e.target.value)
+                        .then((response) => {
+                          setLocation({
+                            ...location,
+                            states: response.data
+                          });
+                        })
+                        .catch((errors) => {
+                          console.log(errors);
+                        });
+                    }}
                     value={values.country}
                     error={Boolean(touched.country && errors.country)}
                   >
@@ -250,11 +262,23 @@ const AuthRegister = () => {
                     name="state"
                     label="state"
                     onBlur={handleBlur}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      ApiService.getCities(e.target.value)
+                        .then((response) => {
+                          setLocation({
+                            ...location,
+                            cities: response.data
+                          });
+                        })
+                        .catch((errors) => {
+                          console.log(errors);
+                        });
+                    }}
                     value={values.state}
                     error={Boolean(touched.state && errors.state)}
                   >
-                    {location.countries.map((state) => (
+                    {location.states.map((state) => (
                       <MenuItem key={state.id} value={state.id}>
                         {state.name}
                       </MenuItem>
@@ -284,7 +308,7 @@ const AuthRegister = () => {
                     value={values.city}
                     error={Boolean(touched.city && errors.city)}
                   >
-                    {location.countries.map((city) => (
+                    {location.cities.map((city) => (
                       <MenuItem key={city.id} value={city.id}>
                         {city.name}
                       </MenuItem>
