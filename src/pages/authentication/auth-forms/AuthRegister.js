@@ -35,6 +35,7 @@ import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 // State Management Inputs.
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import ApiService from 'services/ApiService';
 
 const AuthRegister = () => {
   const navigate = useNavigate();
@@ -66,6 +67,34 @@ const AuthRegister = () => {
     changePassword('');
   }, []);
 
+  const [location, setLocation] = useState({
+    countries: [],
+    states: [],
+    cities: []
+  });
+  const [departments, setDepartments] = useState([]);
+
+  useEffect(() => {
+    ApiService.getDepartments()
+      .then((results) => {
+        console.log(results);
+        setDepartments(results.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    ApiService.getCountries()
+      .then((results) => {
+        console.log('country', results.data);
+        setLocation({
+          ...location,
+          countries: results.data
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
     <>
       <Formik
@@ -74,7 +103,12 @@ const AuthRegister = () => {
           lastname: '',
           phone: '',
           email: '',
+          department: '',
+          country: '',
+          state: '',
+          city: '',
           password: '',
+          repeat_password: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
@@ -83,13 +117,15 @@ const AuthRegister = () => {
           phone: Yup.string().max(12).required('Phone No. is required'),
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
           department: Yup.string().max(255).required('Department is required'),
-          // address: Yup.string().max(255).required('Address is required'),
+          country: Yup.string().max(255).required('Country is required'),
+          state: Yup.string().max(255).required('State is required'),
+          city: Yup.string().max(255).required('City is required'),
           password: Yup.string().max(255).required('Password is required'),
           repeat_password: Yup.string().max(255).required('Password is required')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
-            console.log(values);
+            console.log('values', values);
             setStatus({ success: false });
             setSubmitting(false);
           } catch (err) {
@@ -101,7 +137,7 @@ const AuthRegister = () => {
         }}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-          <form noValidate onSubmit={handleSubmit}>
+          <form noValidate>
             <Grid container spacing={3}>
               <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
@@ -146,7 +182,6 @@ const AuthRegister = () => {
                   )}
                 </Stack>
               </Grid>
-              {/* Department Selection  */}
               <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
                   <InputLabel id="department-signup">Department</InputLabel>
@@ -162,9 +197,11 @@ const AuthRegister = () => {
                     value={values.department}
                     error={Boolean(touched.department && errors.department)}
                   >
-                    <MenuItem value={10}>Account</MenuItem>
-                    <MenuItem value={20}>IT</MenuItem>
-                    <MenuItem value={30}>Purchase</MenuItem>
+                    {departments.map((dep) => (
+                      <MenuItem key={dep.id} value={dep.id}>
+                        {dep.name}
+                      </MenuItem>
+                    ))}
                   </Select>
                   {touched.department && errors.department && (
                     <FormHelperText error id="helper-text-lastname-signup">
@@ -173,35 +210,94 @@ const AuthRegister = () => {
                   )}
                 </Stack>
               </Grid>
-              {/* end of select  */}
-              {/* Location Selection  */}
-              {/* <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
-                  <InputLabel id="department-signup">Department</InputLabel>
+                  <InputLabel id="country-signup">Country</InputLabel>
                   <Select
                     fullWidth
-                    labelId="department-signup"
-                    id="department-signup"
-                    type="department"
-                    name="department"
-                    label="Department"
+                    labelId="country-signup"
+                    id="country-signup"
+                    type="country"
+                    name="country"
+                    label="country"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.department}
-                    error={Boolean(touched.department && errors.department)}
+                    value={values.country}
+                    error={Boolean(touched.country && errors.country)}
                   >
-                    <MenuItem value={10}>Account</MenuItem>
-                    <MenuItem value={20}>IT</MenuItem>
-                    <MenuItem value={30}>Purchase</MenuItem>
+                    {location.countries.map((country) => (
+                      <MenuItem key={country.id} value={country.id}>
+                        {country.name}
+                      </MenuItem>
+                    ))}
                   </Select>
-                  {touched.department && errors.department && (
+                  {touched.country && errors.country && (
                     <FormHelperText error id="helper-text-lastname-signup">
-                      {errors.department}
+                      {errors.country}
                     </FormHelperText>
                   )}
                 </Stack>
-              </Grid> */}
-              {/* end of Location  */}
+              </Grid>
+              {/* Location State  */}
+              <Grid item xs={12} md={6}>
+                <Stack spacing={1}>
+                  <InputLabel id="department-signup">State</InputLabel>
+                  <Select
+                    fullWidth
+                    labelId="state-signup"
+                    id="state-signup"
+                    type="state"
+                    name="state"
+                    label="state"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.state}
+                    error={Boolean(touched.state && errors.state)}
+                  >
+                    {location.countries.map((state) => (
+                      <MenuItem key={state.id} value={state.id}>
+                        {state.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {touched.state && errors.state && (
+                    <FormHelperText error id="helper-text-lastname-signup">
+                      {errors.state}
+                    </FormHelperText>
+                  )}
+                </Stack>
+              </Grid>
+              {/* end of State  */}
+              {/* Location City  */}
+              <Grid item xs={12} md={6}>
+                <Stack spacing={1}>
+                  <InputLabel id="department-signup">City</InputLabel>
+                  <Select
+                    fullWidth
+                    labelId="city-signup"
+                    id="city-signup"
+                    type="city"
+                    name="city"
+                    label="city"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.city}
+                    error={Boolean(touched.city && errors.city)}
+                  >
+                    {location.countries.map((city) => (
+                      <MenuItem key={city.id} value={city.id}>
+                        {city.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {touched.city && errors.city && (
+                    <FormHelperText error id="helper-text-lastname-signup">
+                      {errors.city}
+                    </FormHelperText>
+                  )}
+                </Stack>
+              </Grid>
+              {/* end of City  */}
               <Grid item xs={12}>
                 <Stack spacing={1}>
                   <InputLabel htmlFor="phone-signup">Phone</InputLabel>
@@ -332,18 +428,6 @@ const AuthRegister = () => {
                     </FormHelperText>
                   )}
                 </Stack>
-                {/* <FormControl fullWidth sx={{ mt: 2 }}>
-                  <Grid container spacing={2} alignItems="center">
-                    <Grid item>
-                      <Box sx={{ bgcolor: level?.color, width: 85, height: 8, borderRadius: '7px' }} />
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="subtitle1" fontSize="0.75rem">
-                        {level?.label}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </FormControl> */}
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="body2">
@@ -364,7 +448,20 @@ const AuthRegister = () => {
               )}
               <Grid item xs={12}>
                 <AnimateButton>
-                  <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSubmit();
+                      console.log('values', values);
+                    }}
+                    disableElevation
+                    disabled={isSubmitting}
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                  >
                     Create Account
                   </Button>
                 </AnimateButton>

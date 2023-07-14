@@ -37,9 +37,9 @@ class ApiService {
         })
     }
 
-    static getCart = () => {
+    static getCountries = () => {
         return new Promise((resolve, reject) => {
-            this.apiServer.get('/api/cart').then((response) => {
+            this.apiServer.get('/api/location/countries?country').then((response) => {
                 return resolve(response);
             }).catch((err) => {
                 return reject(err)
@@ -47,11 +47,9 @@ class ApiService {
         })
     }
 
-    static setCart = (table) => {
+    static getStates = (countryId) => {
         return new Promise((resolve, reject) => {
-            this.apiServer.post('/api/cart', {
-                table
-            }).then((response) => {
+            this.apiServer.get(`/api/location/states?country=${countryId}`).then((response) => {
                 return resolve(response);
             }).catch((err) => {
                 return reject(err)
@@ -59,9 +57,9 @@ class ApiService {
         })
     }
 
-    static deleteFromCart = (id) => {
+    static getCities = (stateId) => {
         return new Promise((resolve, reject) => {
-            this.apiServer.delete(`/api/cart/item/${id}`).then((response) => {
+            this.apiServer.get(`/api/location/cities?state=${stateId}`).then((response) => {
                 return resolve(response);
             }).catch((err) => {
                 return reject(err)
@@ -69,39 +67,9 @@ class ApiService {
         })
     }
 
-    static getProducts = () => {
+    static getDepartments = () => {
         return new Promise((resolve, reject) => {
-            this.apiServer.get('/api/products').then((response) => {
-                return resolve(response);
-            }).catch((err) => {
-                return reject(err)
-            })
-        })
-    }
-
-    static getCategories = () => {
-        return new Promise((resolve, reject) => {
-            this.apiServer.get('/api/categories').then((response) => {
-                return resolve(response);
-            }).catch((err) => {
-                return reject(err)
-            })
-        })
-    }
-
-    static getOrders = () => {
-        return new Promise((resolve, reject) => {
-            this.apiServer.get('/api/order').then((response) => {
-                return resolve(response);
-            }).catch((err) => {
-                return reject(err)
-            })
-        })
-    }
-
-    static viewOrder = (id) => {
-        return new Promise((resolve, reject) => {
-            this.apiServer.get(`/api/order/${id} `).then((response) => {
+            this.apiServer.get(`/api/departments`).then((response) => {
                 return resolve(response);
             }).catch((err) => {
                 return reject(err)
