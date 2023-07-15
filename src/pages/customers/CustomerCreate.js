@@ -1,24 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 // material-ui
-import {
-  Box,
-  Button,
-  Divider,
-  FormControl,
-  FormHelperText,
-  Grid,
-  Link,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-  Stack,
-  Typography,
-  Select,
-  MenuItem
-} from '@mui/material';
+import { Button, Divider, FormHelperText, Grid, InputLabel, OutlinedInput, Stack, Select, MenuItem } from '@mui/material';
 
 // third party
 import * as Yup from 'yup';
@@ -29,7 +13,6 @@ import AnimateButton from 'components/@extended/AnimateButton';
 import { strengthColor, strengthIndicator } from 'utils/password-strength';
 
 // assets
-import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
 // State Management Inputs.
 import ApiService from 'services/ApiService';
@@ -40,15 +23,8 @@ import MainCard from 'components/MainCard';
 import ComponentSkeleton from '../components-overview/ComponentSkeleton';
 
 const CustomerCreate = () => {
+  // eslint-disable-next-line no-unused-vars
   const [level, setLevel] = useState();
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
 
   const changePassword = (value) => {
     const temp = strengthIndicator(value);
@@ -89,9 +65,13 @@ const CustomerCreate = () => {
     <>
       <ComponentSkeleton>
         <MainCard>
-          <Divider>
-            <Typography variant="caption">Create Customer</Typography>
-          </Divider>
+          <Button component={Link} sx={{ mb: 2 }} to="/customer" color="success" size="lg" variant="outlined" my={4}>
+            Go Back
+          </Button>
+          <Divider sx={{ mb: 2 }} />
+          <Button component={Link} to="create" sx={{ mb: 2 }}>
+            Create New Customer...
+          </Button>
           <Formik
             initialValues={{
               first_name: 'John',
@@ -102,8 +82,8 @@ const CustomerCreate = () => {
               country: '',
               state: '',
               city: '',
-              password: 'john123',
-              repeat_password: 'john123',
+              shop: '',
+              kyc: '',
               submit: null
             }}
             validationSchema={Yup.object().shape({
@@ -317,6 +297,55 @@ const CustomerCreate = () => {
                     </Stack>
                   </Grid>
                   {/* end of City  */}
+                  <Grid item xs={12} md={6}>
+                    <Stack spacing={1}>
+                      <InputLabel id="kyc-signup">KYC</InputLabel>
+                      <Select
+                        fullWidth
+                        labelId="kyc-signup"
+                        id="kyc-signup"
+                        type="kyc"
+                        name="kyc"
+                        label="Kyc"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.department}
+                        error={Boolean(touched.kyc && errors.kyc)}
+                      >
+                        {departments.map((dep) => (
+                          <MenuItem key={dep.id} value={dep.id}>
+                            {dep.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {touched.kyc && errors.kyc && (
+                        <FormHelperText error id="helper-text-last_name-signup">
+                          {errors.kyc}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="phone-signup">Shop</InputLabel>
+                      <OutlinedInput
+                        fullWidth
+                        error={Boolean(touched.shop && errors.shop)}
+                        id="shop-signup"
+                        value={values.shop}
+                        name="shop"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        placeholder="Shop No."
+                        inputProps={{}}
+                      />
+                      {touched.shop && errors.shop && (
+                        <FormHelperText error id="helper-text-phone-signup">
+                          {errors.shop}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </Grid>
                   <Grid item xs={12}>
                     <Stack spacing={1}>
                       <InputLabel htmlFor="phone-signup">Phone</InputLabel>
@@ -359,106 +388,6 @@ const CustomerCreate = () => {
                         </FormHelperText>
                       )}
                     </Stack>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Stack spacing={1}>
-                      <InputLabel htmlFor="password-signup">Password</InputLabel>
-                      <OutlinedInput
-                        fullWidth
-                        error={Boolean(touched.password && errors.password)}
-                        id="password-signup"
-                        type={showPassword ? 'text' : 'password'}
-                        value={values.password}
-                        name="password"
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          handleChange(e);
-                          changePassword(e.target.value);
-                        }}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={handleClickShowPassword}
-                              onMouseDown={handleMouseDownPassword}
-                              edge="end"
-                              size="large"
-                            >
-                              {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                        placeholder="******"
-                        inputProps={{}}
-                      />
-                      {touched.password && errors.password && (
-                        <FormHelperText error id="helper-text-password-signup">
-                          {errors.password}
-                        </FormHelperText>
-                      )}
-                    </Stack>
-                    <FormControl fullWidth sx={{ mt: 2 }}>
-                      <Grid container spacing={2} alignItems="center">
-                        <Grid item>
-                          <Box sx={{ bgcolor: level?.color, width: 85, height: 8, borderRadius: '7px' }} />
-                        </Grid>
-                        <Grid item>
-                          <Typography variant="subtitle1" fontSize="0.75rem">
-                            {level?.label}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Stack spacing={1}>
-                      <InputLabel htmlFor="password-signup">Repeat Password</InputLabel>
-                      <OutlinedInput
-                        fullWidth
-                        error={Boolean(touched.repeat_password && errors.repeat_password)}
-                        id="repeat_password-signup"
-                        type={showPassword ? 'text' : 'password'}
-                        value={values.repeat_password}
-                        name="repeat_password"
-                        onBlur={handleBlur}
-                        onChange={(e) => {
-                          handleChange(e);
-                          changePassword(e.target.value);
-                        }}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={handleClickShowPassword}
-                              onMouseDown={handleMouseDownPassword}
-                              edge="end"
-                              size="large"
-                            >
-                              {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                        placeholder="******"
-                        inputProps={{}}
-                      />
-                      {touched.repeat_password && errors.repeat_password && (
-                        <FormHelperText error id="helper-text-password-signup">
-                          {errors.repeat_password}
-                        </FormHelperText>
-                      )}
-                    </Stack>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography variant="body2">
-                      By Signing up, you agree to our &nbsp;
-                      <Link variant="subtitle2" component={RouterLink} to="#">
-                        Terms of Service
-                      </Link>
-                      &nbsp; and &nbsp;
-                      <Link variant="subtitle2" component={RouterLink} to="#">
-                        Privacy Policy
-                      </Link>
-                    </Typography>
                   </Grid>
                   {errors.submit && (
                     <Grid item xs={12}>

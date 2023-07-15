@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+// import { useState, useEffect, useMemo } from 'react';
+import CustomerTable from './Table';
 
 // material-ui
 import { Box, Card, Grid, Stack, Typography, Button } from '@mui/material';
-
 // project import
 import MainCard from 'components/MainCard';
 import ComponentSkeleton from '../components-overview/ComponentSkeleton';
@@ -56,87 +57,33 @@ ColorBox.propTypes = {
   main: PropTypes.bool
 };
 
-const students = [];
 // ===============================|| COMPONENT - CUSTOMERS ||=============================== //
 
-const CustomersPanel = () => (
-  <>
-    <ComponentSkeleton>
-      <MainCard>
-        <Button component={Link} to="/customer/create" color="success" size="lg" variant="outlined" my={4}>
-          + Customer
-        </Button>
-        <Grid container spacing={3} variant="outlined">
-          <Grid item xs={12} sm={6} md={4}>
-            <Typography>Add Customer</Typography>
+const CustomersPanel = () => {
+  return (
+    <>
+      <ComponentSkeleton>
+        <MainCard>
+          <Button component={Link} to="/customer/create" color="success" size="lg" variant="outlined" my={4}>
+            + Customer
+          </Button>
+          <Grid container spacing={3} variant="outlined">
+            <Box
+              sx={(theme) => ({
+                minHeight: '100vh',
+                padding: theme.spacing(4)
+              })}
+            >
+              <Button component={Link} to="create" sx={{ mb: 2 }}>
+                Available Customers...
+              </Button>
+              <CustomerTable />
+            </Box>
           </Grid>
-          {/* To be Removed */}
-          <Box
-            sx={(theme) => ({
-              minHeight: '100vh',
-              padding: theme.spacing(4)
-            })}
-          >
-            <Button component={Link} to="create" sx={{ mb: 2 }}>
-              Insert New Student
-            </Button>
-            <Grid spacing={2} container>
-              {students.map((student) => (
-                <Grid key={student.id} item xs={12} sm={6} md={3} xl={2}>
-                  <Card variant="outlined">
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Box sx={{ flex: 1 }}>
-                        <Typography level="h2" fontSize="md" sx={{ mb: 0.5 }}>
-                          {student.name}
-                        </Typography>
-                        <Typography
-                          level="body2"
-                          sx={{
-                            display: 'block',
-                            whiteSpace: 'nowrap',
-                            width: '80%',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis'
-                          }}
-                        >
-                          {student.address}
-                        </Typography>
-                      </Box>
-                      <Button component={Link} to={`${student.id}/edit`} color="success">
-                        Edit
-                      </Button>
-                    </Box>
-                    <Typography>Image</Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <div>
-                        <Typography fontSize="lg" fontWeight="lg">
-                          class: {student.standard}
-                        </Typography>
-                        <Typography level="body3">
-                          Roll: {student.roll} | sec: {student.section}
-                        </Typography>
-                      </div>
-
-                      <Button
-                        type="submit"
-                        variant="soft"
-                        size="sm"
-                        color="danger"
-                        aria-label="Explore Bahamas Islands"
-                        sx={{ fontWeight: 600 }}
-                      >
-                        Delete
-                      </Button>
-                    </Box>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        </Grid>
-      </MainCard>
-    </ComponentSkeleton>
-  </>
-);
+        </MainCard>
+      </ComponentSkeleton>
+    </>
+  );
+};
 
 export default CustomersPanel;
