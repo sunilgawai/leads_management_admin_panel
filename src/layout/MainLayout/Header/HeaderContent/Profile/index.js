@@ -53,25 +53,22 @@ function a11yProps(index) {
 
 // Logout Handler Import.
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { removeAuth } from 'store/reducers/userSlice';
 
 // ==============================|| HEADER CONTENT - PROFILE ||============================== //
 
 const Profile = () => {
   const theme = useTheme();
-  // const {
-  //   auth: { refresh_token }
-  // } = useSelector((state) => state.userSlice);
+  const {
+    userSlice: {
+      auth: { user }
+    }
+  } = useSelector((state) => state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    // logout
-    // ApiService.logout({ refresh_token }).then((response) => {
-    //   console.log('logout response', response);
-    //   dispatch(removeAuth({}));
-    // });
     dispatch(removeAuth({}));
     navigate('/login');
   };
@@ -114,7 +111,9 @@ const Profile = () => {
       >
         <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 0.5 }}>
           <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
-          <Typography variant="subtitle1">John Doe</Typography>
+          <Typography variant="subtitle1">
+            {user?.first_name} {user?.last_name}
+          </Typography>
         </Stack>
       </ButtonBase>
       <Popper
@@ -157,9 +156,12 @@ const Profile = () => {
                           <Stack direction="row" spacing={1.25} alignItems="center">
                             <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
                             <Stack>
-                              <Typography variant="h6">John Doe</Typography>
+                              <Typography variant="h6">
+                                {user?.first_name} {user?.last_name}
+                              </Typography>
                               <Typography variant="body2" color="textSecondary">
-                                UI/UX Designer
+                                {/* UI/UX Designer */}
+                                {user?.role}
                               </Typography>
                             </Stack>
                           </Stack>

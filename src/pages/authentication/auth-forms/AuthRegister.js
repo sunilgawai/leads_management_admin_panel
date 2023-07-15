@@ -34,12 +34,13 @@ import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
 // State Management Inputs.
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import ApiService from 'services/ApiService';
+import { setAuth } from 'store/reducers/userSlice';
 
 const AuthRegister = () => {
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const { auth } = useSelector((state) => state.userSlice);
 
   useEffect(() => {
@@ -77,7 +78,6 @@ const AuthRegister = () => {
   useEffect(() => {
     ApiService.getDepartments()
       .then((results) => {
-        console.log(results);
         setDepartments(results.data);
       })
       .catch((err) => {
@@ -85,7 +85,6 @@ const AuthRegister = () => {
       });
     ApiService.getCountries()
       .then((results) => {
-        console.log('country', results.data);
         setLocation({
           ...location,
           countries: results.data
@@ -107,8 +106,8 @@ const AuthRegister = () => {
           country: '',
           state: '',
           city: '',
-          password: 'john@123',
-          repeat_password: 'john@123',
+          password: 'john123',
+          repeat_password: 'john123',
           submit: null
         }}
         validationSchema={Yup.object().shape({
@@ -136,7 +135,7 @@ const AuthRegister = () => {
           }
         }}
       >
-        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+        {({ errors, handleBlur, handleChange, isSubmitting, touched, values }) => (
           <form noValidate>
             <Grid container spacing={3}>
               <Grid item xs={12} md={6}>
@@ -475,8 +474,20 @@ const AuthRegister = () => {
                   <Button
                     onClick={(e) => {
                       e.preventDefault();
-                      handleSubmit();
-                      console.log('values', values);
+                      // handleSubmit();
+                      ApiService.register(values)
+                        .then((response) => {
+                          if (response.status === 200) {
+                            const { data } = response;
+                            dispatch(setAuth({ data }));
+                            navigate('/');
+                          }
+                          // Setting Errors
+                          console.log('res', response);
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        });
                     }}
                     disableElevation
                     disabled={isSubmitting}

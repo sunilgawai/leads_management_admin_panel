@@ -11,11 +11,11 @@ class ApiService {
         withCredentials: true
     });
 
-    static register = ({ first_name, last_name, department, country, state, city, email, phone, password, repeat_password }) => {
+    static register = ({ firstname, lastname, department, country, state, city, email, phone, password, repeat_password }) => {
         return new Promise((resolve, reject) => {
-            this.apiServer.post('/api/auth/login', {
-                first_name,
-                last_name,
+            this.apiServer.post('/api/auth/register', {
+                first_name: firstname,
+                last_name: lastname,
                 department,
                 country,
                 state,
