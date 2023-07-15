@@ -1,10 +1,15 @@
 // assets
-import { DashboardOutlined, RiseOutlined } from '@ant-design/icons';
+import { DashboardOutlined, RiseOutlined, UserOutlined, ShoppingOutlined, DatabaseOutlined, SnippetsOutlined, FileTextOutlined } from '@ant-design/icons';
 
 // icons
 const icons = {
   DashboardOutlined,
-  RiseOutlined
+  RiseOutlined,
+  UserOutlined,
+  ShoppingOutlined,
+  DatabaseOutlined,
+  SnippetsOutlined,
+  FileTextOutlined
 };
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
@@ -23,6 +28,14 @@ const dashboard = {
       breadcrumbs: false
     },
     {
+      id: 'users',
+      title: 'Users',
+      type: 'item',
+      url: '/users',
+      icon: icons.UserOutlined,
+      breadcrumbs: false
+    },
+    {
       id: 'leads',
       title: 'Leads',
       type: 'item',
@@ -30,28 +43,28 @@ const dashboard = {
       icon: icons.RiseOutlined,
       breadcrumbs: false
     },
-    // {
-    //   id: 'customers',
-    //   title: 'Leads',
-    //   type: 'item',
-    //   url: '/customers',
-    //   icon: icons.RiseOutlined,
-    //   breadcrumbs: false
-    // },
     {
-      id: 'examples1',
-      title: 'Example',
+      id: 'orders',
+      title: 'Orders',
       type: 'item',
-      url: '/examples1',
-      icon: icons.RiseOutlined,
+      url: '/orders',
+      icon: icons.ShoppingOutlined,
       breadcrumbs: false
     },
     {
-      id: 'examples2',
-      title: 'Example',
+      id: 'quotations',
+      title: 'Quotations',
       type: 'item',
-      url: '/examples2',
-      icon: icons.RiseOutlined,
+      url: '/quotations',
+      icon: icons.FileTextOutlined,
+      breadcrumbs: false
+    },
+    {
+      id: 'cms',
+      title: 'CMS',
+      type: 'item',
+      url: '/cms',
+      icon: icons.SnippetsOutlined,
       breadcrumbs: false
     }
   ]
