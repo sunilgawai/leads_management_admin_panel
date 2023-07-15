@@ -15,6 +15,11 @@ const Typography = Loadable(lazy(() => import('pages/components-overview/Typogra
 const Color = Loadable(lazy(() => import('pages/components-overview/Color')));
 const Shadow = Loadable(lazy(() => import('pages/components-overview/Shadow')));
 const AntIcons = Loadable(lazy(() => import('pages/components-overview/AntIcons')));
+// Custom.
+const CustomersPanel = Loadable(lazy(() => import('pages/customers')));
+const CustomerCreate = Loadable(lazy(() => import('pages/customers/CustomerCreate')));
+const CustomerUpdate = Loadable(lazy(() => import('pages/customers/CustomerUpdate')));
+const CustomerView = Loadable(lazy(() => import('pages/customers/CustomerView')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -27,6 +32,22 @@ const MainRoutes = {
       element: <DashboardDefault />
     },
     {
+      path: '/customer',
+      element: <CustomersPanel />
+    },
+    {
+      path: '/customer/create',
+      element: <CustomerCreate />
+    },
+    {
+      path: '/customer/update',
+      element: <CustomerUpdate />
+    },
+    {
+      path: '/customer/view',
+      element: <CustomerView />
+    },
+    {
       path: 'color',
       element: <Color />
     },
@@ -34,8 +55,8 @@ const MainRoutes = {
       path: 'dashboard',
       children: [
         {
-          path: 'default',
-          element: <DashboardDefault />
+          path: 'customers',
+          element: <CustomersPanel />
         }
       ]
     },

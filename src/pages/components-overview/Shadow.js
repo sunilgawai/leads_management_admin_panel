@@ -53,6 +53,7 @@ const ComponentShadow = () => {
 
   return (
     <ComponentSkeleton>
+      <Typography>Something</Typography>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <MainCard title="Basic Shadow" codeHighlight>

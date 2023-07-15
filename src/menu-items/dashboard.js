@@ -15,10 +15,10 @@ const dashboard = {
   type: 'group',
   children: [
     {
-      id: 'dashboard',
-      title: 'Dashboard',
+      id: 'customers',
+      title: 'Customers',
       type: 'item',
-      url: '/dashboard/default',
+      url: '/customer',
       icon: icons.DashboardOutlined,
       breadcrumbs: false
     },
@@ -26,7 +26,31 @@ const dashboard = {
       id: 'leads',
       title: 'Leads',
       type: 'item',
-      url: '/dashboard/leads',
+      url: '/leads',
+      icon: icons.RiseOutlined,
+      breadcrumbs: false
+    },
+    // {
+    //   id: 'customers',
+    //   title: 'Leads',
+    //   type: 'item',
+    //   url: '/customers',
+    //   icon: icons.RiseOutlined,
+    //   breadcrumbs: false
+    // },
+    {
+      id: 'examples1',
+      title: 'Example',
+      type: 'item',
+      url: '/examples1',
+      icon: icons.RiseOutlined,
+      breadcrumbs: false
+    },
+    {
+      id: 'examples2',
+      title: 'Example',
+      type: 'item',
+      url: '/examples2',
       icon: icons.RiseOutlined,
       breadcrumbs: false
     }
