@@ -97,6 +97,46 @@ class ApiService {
             })
         })
     }
+
+    static getKycList = () => {
+        return new Promise((resolve, reject) => {
+            this.apiServer.get(`/api/kyc`).then((response) => {
+                return resolve(response);
+            }).catch((err) => {
+                return reject(err)
+            })
+        })
+    }
+
+    static storeCustomer = ({ first_name, last_name, country, state, city, email, phone, shop, kyc }) => {
+        return new Promise((resolve, reject) => {
+            this.apiServer.post('/api/customer', {
+                first_name,
+                last_name,
+                country,
+                state,
+                city,
+                email,
+                phone,
+                shop,
+                kyc
+            }).then((response) => {
+                return resolve(response);
+            }).catch((error) => {
+                return reject(error);
+            })
+        })
+    }
+
+    static getCustomers = () => {
+        return new Promise((resolve, reject) => {
+            this.apiServer.get(`/api/customer`).then((response) => {
+                return resolve(response);
+            }).catch((err) => {
+                return reject(err)
+            })
+        })
+    }
 }
 
 export default ApiService;

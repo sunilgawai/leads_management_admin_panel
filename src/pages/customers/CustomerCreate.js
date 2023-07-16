@@ -16,7 +16,7 @@ import { strengthColor, strengthIndicator } from 'utils/password-strength';
 
 // State Management Inputs.
 import ApiService from 'services/ApiService';
-import { setAuth } from 'store/reducers/userSlice';
+// import { setAuth } from 'store/reducers/userSlice';
 
 // Component imports.
 import MainCard from 'components/MainCard';
@@ -34,15 +34,23 @@ const CustomerCreate = () => {
   useEffect(() => {
     changePassword('');
   }, []);
-
+  // for customer location.
   const [location, setLocation] = useState({
     countries: [],
     states: [],
     cities: []
   });
   const [departments, setDepartments] = useState([]);
+  const [kyc, setKyc] = useState([]);
 
   useEffect(() => {
+    ApiService.getKycList()
+      .then((results) => {
+        setKyc(results.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     ApiService.getDepartments()
       .then((results) => {
         setDepartments(results.data);
@@ -82,7 +90,7 @@ const CustomerCreate = () => {
               country: '',
               state: '',
               city: '',
-              shop: '',
+              shop: 'paradise',
               kyc: '',
               submit: null
             }}
@@ -95,8 +103,8 @@ const CustomerCreate = () => {
               country: Yup.string().max(255).required('Country is required'),
               state: Yup.string().max(255).required('State is required'),
               city: Yup.string().max(255).required('City is required'),
-              password: Yup.string().max(255).required('Password is required'),
-              repeat_password: Yup.string().max(255).required('Password is required')
+              shop: Yup.string().max(255).required('Shop is required'),
+              kyc: Yup.string().max(255).required('KYC is required')
             })}
             onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
               try {
@@ -225,7 +233,6 @@ const CustomerCreate = () => {
                       )}
                     </Stack>
                   </Grid>
-                  {/* Location State  */}
                   <Grid item xs={12} md={6}>
                     <Stack spacing={1}>
                       <InputLabel id="department-signup">State</InputLabel>
@@ -266,8 +273,6 @@ const CustomerCreate = () => {
                       )}
                     </Stack>
                   </Grid>
-                  {/* end of State  */}
-                  {/* Location City  */}
                   <Grid item xs={12} md={6}>
                     <Stack spacing={1}>
                       <InputLabel id="department-signup">City</InputLabel>
@@ -296,7 +301,27 @@ const CustomerCreate = () => {
                       )}
                     </Stack>
                   </Grid>
-                  {/* end of City  */}
+                  <Grid item xs={12} md={6}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="phone-signup">Shop</InputLabel>
+                      <OutlinedInput
+                        fullWidth
+                        error={Boolean(touched.shop && errors.shop)}
+                        id="shop-signup"
+                        value={values.shop}
+                        name="shop"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        placeholder="Shop Name"
+                        inputProps={{}}
+                      />
+                      {touched.shop && errors.shop && (
+                        <FormHelperText error id="helper-text-phone-signup">
+                          {errors.shop}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </Grid>
                   <Grid item xs={12} md={6}>
                     <Stack spacing={1}>
                       <InputLabel id="kyc-signup">KYC</InputLabel>
@@ -309,39 +334,18 @@ const CustomerCreate = () => {
                         label="Kyc"
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        value={values.department}
+                        value={values.kyc}
                         error={Boolean(touched.kyc && errors.kyc)}
                       >
-                        {departments.map((dep) => (
-                          <MenuItem key={dep.id} value={dep.id}>
-                            {dep.name}
+                        {kyc.map((kyc) => (
+                          <MenuItem key={kyc.id} value={kyc.id}>
+                            {kyc.type}
                           </MenuItem>
                         ))}
                       </Select>
                       {touched.kyc && errors.kyc && (
                         <FormHelperText error id="helper-text-last_name-signup">
                           {errors.kyc}
-                        </FormHelperText>
-                      )}
-                    </Stack>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Stack spacing={1}>
-                      <InputLabel htmlFor="phone-signup">Shop</InputLabel>
-                      <OutlinedInput
-                        fullWidth
-                        error={Boolean(touched.shop && errors.shop)}
-                        id="shop-signup"
-                        value={values.shop}
-                        name="shop"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        placeholder="Shop No."
-                        inputProps={{}}
-                      />
-                      {touched.shop && errors.shop && (
-                        <FormHelperText error id="helper-text-phone-signup">
-                          {errors.shop}
                         </FormHelperText>
                       )}
                     </Stack>
@@ -399,13 +403,12 @@ const CustomerCreate = () => {
                       <Button
                         onClick={(e) => {
                           e.preventDefault();
-                          // handleSubmit();
-                          ApiService.register(values)
+                          console.log('values', values);
+                          ApiService.storeCustomer(values)
                             .then((response) => {
                               if (response.status === 200) {
                                 const { data } = response;
-                                dispatch(setAuth({ data }));
-                                navigate('/');
+                                console.log('stored', data);
                               }
                               // Setting Errors
                               console.log('res', response);
@@ -422,7 +425,7 @@ const CustomerCreate = () => {
                         variant="contained"
                         color="primary"
                       >
-                        Create Account
+                        Store Customer
                       </Button>
                     </AnimateButton>
                   </Grid>

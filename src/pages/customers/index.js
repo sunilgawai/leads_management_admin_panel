@@ -8,6 +8,9 @@ import { Box, Card, Grid, Stack, Typography, Button } from '@mui/material';
 // project import
 import MainCard from 'components/MainCard';
 import ComponentSkeleton from '../components-overview/ComponentSkeleton';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchCustomers } from 'store/reducers/customerSlice';
 
 // ===============================|| COLOR BOX ||=============================== //
 
@@ -60,6 +63,10 @@ ColorBox.propTypes = {
 // ===============================|| COMPONENT - CUSTOMERS ||=============================== //
 
 const CustomersPanel = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchCustomers());
+  }, []);
   return (
     <>
       <ComponentSkeleton>
