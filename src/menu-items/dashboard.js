@@ -1,5 +1,13 @@
 // assets
-import { DashboardOutlined, RiseOutlined, UserOutlined, ShoppingOutlined, DatabaseOutlined, SnippetsOutlined, FileTextOutlined } from '@ant-design/icons';
+import {
+  DashboardOutlined,
+  RiseOutlined,
+  UserOutlined,
+  ShoppingOutlined,
+  DatabaseOutlined,
+  SnippetsOutlined,
+  FileTextOutlined
+} from '@ant-design/icons';
 
 // icons
 const icons = {
@@ -25,7 +33,7 @@ const dashboard = {
       type: 'item',
       url: '/customer',
       icon: icons.DashboardOutlined,
-      breadcrumbs: false
+      breadcrumbs: true
     },
     {
       id: 'users',
@@ -33,7 +41,7 @@ const dashboard = {
       type: 'item',
       url: '/users',
       icon: icons.UserOutlined,
-      breadcrumbs: false
+      breadcrumbs: true
     },
     {
       id: 'leads',
@@ -41,7 +49,7 @@ const dashboard = {
       type: 'item',
       url: '/leads',
       icon: icons.RiseOutlined,
-      breadcrumbs: false
+      breadcrumbs: true
     },
     {
       id: 'orders',
@@ -49,7 +57,7 @@ const dashboard = {
       type: 'item',
       url: '/orders',
       icon: icons.ShoppingOutlined,
-      breadcrumbs: false
+      breadcrumbs: true
     },
     {
       id: 'quotations',
@@ -57,7 +65,7 @@ const dashboard = {
       type: 'item',
       url: '/quotations',
       icon: icons.FileTextOutlined,
-      breadcrumbs: false
+      breadcrumbs: true
     },
     {
       id: 'cms',
@@ -65,7 +73,7 @@ const dashboard = {
       type: 'item',
       url: '/cms',
       icon: icons.SnippetsOutlined,
-      breadcrumbs: false
+      breadcrumbs: true
     }
   ]
 };

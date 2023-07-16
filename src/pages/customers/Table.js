@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -22,7 +23,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { visuallyHidden } from '@mui/utils';
 import { DeleteOutlined, FilterOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
 
+const getTableDataFormat = (obj) => Object.keys(obj);
 function createData(name, calories, fat, carbs, protein) {
   return {
     name,
@@ -77,34 +80,34 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'name',
+    id: 'email',
     numeric: false,
     disablePadding: true,
-    label: 'Dessert (100g serving)'
+    label: 'Email'
   },
   {
-    id: 'calories',
-    numeric: true,
+    id: 'name',
+    numeric: false,
     disablePadding: false,
-    label: 'Calories'
+    label: 'Name'
   },
   {
-    id: 'fat',
-    numeric: true,
+    id: 'phone',
+    numeric: false,
     disablePadding: false,
-    label: 'Fat (g)'
+    label: 'Phone'
   },
   {
-    id: 'carbs',
-    numeric: true,
+    id: 'country',
+    numeric: false,
     disablePadding: false,
-    label: 'Carbs (g)'
+    label: 'Country'
   },
   {
-    id: 'protein',
-    numeric: true,
+    id: 'shop',
+    numeric: false,
     disablePadding: false,
-    label: 'Protein (g)'
+    label: 'Shop'
   }
 ];
 
@@ -217,6 +220,9 @@ export default function CustomerTable() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  const customers = useSelector((state) => state.customerSlice.customers);
+  // getTableDataFormat(customers[0]);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -225,7 +231,8 @@ export default function CustomerTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
+      // const newSelected = rows.map((n) => n.name);
+      const newSelected = customers.map((n) => n.name);
       setSelected(newSelected);
       return;
     }
@@ -265,12 +272,14 @@ export default function CustomerTable() {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - customers.length) : 0;
 
   const visibleRows = React.useMemo(
-    () => stableSort(rows, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    () => stableSort(customers, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [order, orderBy, page, rowsPerPage]
   );
+
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -284,21 +293,21 @@ export default function CustomerTable() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={customers.length}
             />
             <TableBody>
-              {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected(row.name);
+              {visibleRows.map((customers, index) => {
+                const isItemSelected = isSelected(customers.name);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.name)}
+                    onClick={(event) => handleClick(event, customers.name)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.name}
+                    key={customers.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
@@ -312,12 +321,21 @@ export default function CustomerTable() {
                       />
                     </TableCell>
                     <TableCell component="th" id={labelId} scope="row" padding="none">
-                      {row.name}
+                      {customers.email}
                     </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
+                    <TableCell align="right">{customers.first_name}</TableCell>
+                    <TableCell align="right">{customers.phone}</TableCell>
+                    <TableCell align="right">{customers.carbs}</TableCell>
+                    <TableCell align="right">{customers.protein}</TableCell>
+                    <TableCell align="right">
+                      <Button
+                        component={Link}
+                        to={`/customer/${customers.id}`}
+                        sx={{ mb: 2 }}
+                      >
+                        View
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 );
               })}

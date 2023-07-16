@@ -77,9 +77,9 @@ const CustomerCreate = () => {
             Go Back
           </Button>
           <Divider sx={{ mb: 2 }} />
-          <Button component={Link} to="create" sx={{ mb: 2 }}>
+          {/* <Button component={Link} to="create" sx={{ mb: 2 }}>
             Create New Customer...
-          </Button>
+          </Button> */}
           <Formik
             initialValues={{
               first_name: 'John',

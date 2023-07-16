@@ -36,16 +36,16 @@ const MainRoutes = {
       element: <CustomersPanel />
     },
     {
+      path: '/customer/:id',
+      element: <CustomerView />
+    },
+    {
       path: '/customer/create',
       element: <CustomerCreate />
     },
     {
       path: '/customer/update',
       element: <CustomerUpdate />
-    },
-    {
-      path: '/customer/view',
-      element: <CustomerView />
     },
     {
       path: 'color',

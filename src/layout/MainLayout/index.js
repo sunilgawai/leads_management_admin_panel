@@ -22,7 +22,6 @@ const MainLayout = () => {
   const matchDownLG = useMediaQuery(theme.breakpoints.down('lg'));
   const dispatch = useDispatch();
 
-  // const { drawerOpen } = useSelector((state) => state.menu);
   const {
     menu: { drawerOpen },
     userSlice: { isAuth }

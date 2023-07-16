@@ -19,7 +19,6 @@ const initialState = {
 
 export const fetchCustomers = createAsyncThunk('customers/fetchCustomers', async () => {
     try {
-        console.log("customers fetching");
         const res = await ApiService.getCustomers();
         const customers = await res.data;
         return customers;
@@ -39,7 +38,10 @@ const customerSlice = createSlice({
             state.customers.push(...action.payload);
         },
         setCustomer: (state, action) => {
-            const customer = action.payload;
+            const id = action.payload;  //01c6762c-8ab0-4bfd-8ffe-f5ad3418a015
+            // console.log(id, state);
+            const customer = state.customers.find((c) => c.id === id);
+            // console.log(customer);
             state.customer = customer;
         },
 
@@ -51,22 +53,20 @@ const customerSlice = createSlice({
         }
     },
     extraReducers(builder) {
-        builder.addCase(fetchCustomers.pending, (state, action) => {
+        builder.addCase(fetchCustomers.pending, (state) => {
             state.status = customerStateStatus.LOADING;
         })
             .addCase(fetchCustomers.fulfilled, (state, action) => {
                 state.status = customerStateStatus.SUCCEEDED;
-                console.log("in add case fulfillment", action.payload);
                 state.customers = state.customers.concat(action.payload);
             })
 
             .addCase(fetchCustomers.rejected, (state, action) => {
                 state.status = customerStateStatus.FAILED;
-                console.log("in add case fulfillment", action.payload);
                 state.error.push(action.error.message);
             })
     }
 });
 
-export const { setCustomers, addCustomer } = customerSlice.actions;
+export const { setCustomers, setCustomer } = customerSlice.actions;
 export default customerSlice.reducer;
