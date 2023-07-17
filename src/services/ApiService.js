@@ -137,6 +137,36 @@ class ApiService {
             })
         })
     }
+
+    static deleteCustomer = (id) => {
+        return new Promise((resolve, reject) => {
+            this.apiServer.delete(`/api/customer/${id}`).then((response) => {
+                return resolve(response);
+            }).catch((err) => {
+                return reject(err)
+            })
+        })
+    }
+
+    static updateCustomer = ({ first_name, last_name, country, state, city, email, phone, shop, kyc }) => {
+        return new Promise((resolve, reject) => {
+            this.apiServer.update(`/api/customer/${id}`, {
+                first_name,
+                last_name,
+                country,
+                state,
+                city,
+                email,
+                phone,
+                shop,
+                kyc
+            }).then((response) => {
+                return resolve(response);
+            }).catch((error) => {
+                return reject(error);
+            })
+        })
+    }
 }
 
 export default ApiService;

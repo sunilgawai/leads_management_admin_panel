@@ -39,10 +39,10 @@ import { setAuth } from 'store/reducers/userSlice';
 const AuthLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { auth } = useSelector((state) => state.userSlice);
+  const { isAuth } = useSelector((state) => state.userSlice);
 
   React.useEffect(() => {
-    if (auth) {
+    if (isAuth) {
       navigate('/');
     }
   }, []);
@@ -82,8 +82,8 @@ const AuthLogin = () => {
                 // console.log(data);
                 dispatch(setAuth({ data }));
                 navigate('/');
-              }).catch(err => {
-                console.log(err);
+              }).catch(({response}) => {
+                setErrors({ submit: response.data.message });
               })
             setStatus({ success: true });
             setSubmitting(false);

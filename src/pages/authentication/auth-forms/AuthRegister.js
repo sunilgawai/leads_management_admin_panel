@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -74,7 +75,6 @@ const AuthRegister = () => {
     cities: []
   });
   const [departments, setDepartments] = useState([]);
-
   useEffect(() => {
     ApiService.getDepartments()
       .then((results) => {
@@ -485,8 +485,8 @@ const AuthRegister = () => {
                           // Setting Errors
                           console.log('res', response);
                         })
-                        .catch((err) => {
-                          console.log(err);
+                        .catch(({ response }) => {
+                          console.log(response);
                         });
                     }}
                     disableElevation

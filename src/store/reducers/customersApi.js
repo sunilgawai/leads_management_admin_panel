@@ -17,13 +17,23 @@ export const customersApi = createApi({
     }),
     storeCustomer: builder.mutation({
       query: (customer) => ({
-        url: 'customer',
+        url: 'api/customer',
         method: 'POST',
         body: customer
       })
     }),
-    updateCustomer: builder.query({
-      query: (id) => `api/customer/${id}`
+    updateCustomer: builder.mutation({
+      query: (customer) => ({
+        url: `api/customer/${customer.id}`,
+        method: 'UPDATE',
+        body: customer
+      })
+    }),
+    deleteCustomer: builder.mutation({
+      query: (id) => ({
+        url: `api/customer/${id}`,
+        method: 'DELETE'
+      })
     })
   })
 });

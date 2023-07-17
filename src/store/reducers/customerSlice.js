@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import ApiService from 'services/ApiService';
+import { useGetCustomersQuery } from './customersApi';
 
 const customerStateStatus = Object.freeze({
     'IDLE': 'idle',
@@ -28,7 +29,6 @@ export const fetchCustomers = createAsyncThunk('customers/fetchCustomers', async
     }
 });
 
-
 const customerSlice = createSlice({
     name: 'customer',
     initialState,
@@ -52,6 +52,20 @@ const customerSlice = createSlice({
             state.error = action.payload;
         }
     },
+    // extraReducers: (builder) => {
+    //     builder
+    //         .addCase(useGetCustomersQuery.pending, (state) => {
+    //             state.status = 'loading';
+    //         })
+    //         .addCase(useGetCustomersQuery.fulfilled, (state, action) => {
+    //             state.customers = action.payload;
+    //             state.status = 'succeeded';
+    //         })
+    //         .addCase(useGetCustomersQuery.rejected, (state, action) => {
+    //             state.status = 'failed';
+    //             state.error = action.error.message;
+    //         });
+    // }
     extraReducers(builder) {
         builder.addCase(fetchCustomers.pending, (state) => {
             state.status = customerStateStatus.LOADING;

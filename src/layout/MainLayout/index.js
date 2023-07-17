@@ -29,6 +29,7 @@ const MainLayout = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (!isAuth) {
+      console.log(isAuth);
       navigate('/login');
     }
   }, [isAuth]);

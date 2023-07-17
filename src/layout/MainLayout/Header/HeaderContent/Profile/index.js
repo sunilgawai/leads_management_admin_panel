@@ -60,11 +60,10 @@ import { removeAuth } from 'store/reducers/userSlice';
 
 const Profile = () => {
   const theme = useTheme();
+  const { userSlice } = useSelector((state) => state);
   const {
-    userSlice: {
-      auth: { user }
-    }
-  } = useSelector((state) => state);
+    auth: { user }
+  } = userSlice;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

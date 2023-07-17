@@ -44,7 +44,7 @@ const MainRoutes = {
       element: <CustomerCreate />
     },
     {
-      path: '/customer/update',
+      path: '/customer/update/:id',
       element: <CustomerUpdate />
     },
     {

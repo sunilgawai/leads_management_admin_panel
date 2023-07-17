@@ -24,6 +24,7 @@ import Switch from '@mui/material/Switch';
 import { visuallyHidden } from '@mui/utils';
 import { DeleteOutlined, FilterOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
+import ApiService from 'services/ApiService';
 
 const getTableDataFormat = (obj) => Object.keys(obj);
 function createData(name, calories, fat, carbs, protein) {
@@ -280,7 +281,6 @@ export default function CustomerTable() {
     [order, orderBy, page, rowsPerPage]
   );
 
-
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -328,12 +328,29 @@ export default function CustomerTable() {
                     <TableCell align="right">{customers.carbs}</TableCell>
                     <TableCell align="right">{customers.protein}</TableCell>
                     <TableCell align="right">
+                      <Button component={Link} to={`/customer/${customers.id}`} sx={{ mb: 2 }}>
+                        View
+                      </Button>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Button component={Link} to={`/customer/update/${customers.id}`} sx={{ mb: 2 }}>
+                        Update
+                      </Button>
+                    </TableCell>
+                    <TableCell align="right">
                       <Button
-                        component={Link}
-                        to={`/customer/${customers.id}`}
+                        onClick={() => {
+                          ApiService.deleteCustomer(customers.id)
+                            .then((results) => {
+                              console.log('Customer deleted', results);
+                            })
+                            .catch((err) => {
+                              console.log('Error', err);
+                            });
+                        }}
                         sx={{ mb: 2 }}
                       >
-                        View
+                        Delete
                       </Button>
                     </TableCell>
                   </TableRow>

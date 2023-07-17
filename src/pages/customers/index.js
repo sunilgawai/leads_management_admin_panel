@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 // import { useState, useEffect, useMemo } from 'react';
 import CustomerTable from './Table';
-import { useGetCustomersQuery } from 'store/reducers/customersApi';
 // material-ui
 import { Box, Card, Grid, Stack, Typography, Button } from '@mui/material';
 // project import
@@ -63,8 +62,6 @@ ColorBox.propTypes = {
 // ===============================|| COMPONENT - CUSTOMERS ||=============================== //
 
 const CustomersPanel = () => {
-  console.log(useGetCustomersQuery());
-  // const { data, isLoading, isFetching, isSuccess } = useGetCustomersQuery();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchCustomers());

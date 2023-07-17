@@ -5,7 +5,10 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     isAuth: localStorage.getItem('auth') ? true : false,
-    auth: localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : null,
+    auth: localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : {
+        user: null,
+        isAuth: false
+    },
 };
 
 const userSlice = createSlice({
@@ -22,7 +25,6 @@ const userSlice = createSlice({
             return state;
         },
         removeAuth: (state) => {
-            // Todo: Remove auth from state.
             localStorage.removeItem('auth');
             state = {
                 isAuth: false,
