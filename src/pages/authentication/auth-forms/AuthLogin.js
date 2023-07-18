@@ -79,10 +79,11 @@ const AuthLogin = () => {
             setSubmitting(true);
             ApiService.login({ email: values.email, phone: values.phone, password: values.password })
               .then(({ data }) => {
-                // console.log(data);
+                console.log(data);
                 dispatch(setAuth({ data }));
                 navigate('/');
               }).catch(({response}) => {
+                console.log(response);
                 setErrors({ submit: response.data.message });
               })
             setStatus({ success: true });

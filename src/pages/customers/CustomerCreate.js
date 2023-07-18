@@ -21,11 +21,15 @@ import ApiService from 'services/ApiService';
 import { setCustomer } from 'store/reducers/customerSlice';
 import { useDispatch } from 'react-redux';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 // Component imports.
 import MainCard from 'components/MainCard';
 import ComponentSkeleton from '../components-overview/ComponentSkeleton';
 
 const CustomerCreate = () => {
+  const notify = () => toast('customer added successfully.');
   // eslint-disable-next-line no-unused-vars
   const [level, setLevel] = useState();
   const dispatch = useDispatch();
@@ -73,6 +77,7 @@ const CustomerCreate = () => {
             Go Back
           </Button>
           <Divider sx={{ mb: 2 }} />
+          <ToastContainer />
           <Formik
             initialValues={{
               first_name: '',
@@ -108,7 +113,7 @@ const CustomerCreate = () => {
                   dispatch(setCustomer(response.data));
                   // console.log('response', response);
                   resetForm();
-                  // notify();
+                  notify();
                 }
                 setStatus({ success: false });
                 setSubmitting(false);

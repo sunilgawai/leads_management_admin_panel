@@ -41,6 +41,7 @@ const ComponentView = () => {
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
             <Stack spacing={1}>
+              <InputLabel htmlFor="first_name-login">First Name*</InputLabel>
               <OutlinedInput
                 id="first_name-login"
                 type="first_name"

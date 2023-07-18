@@ -106,7 +106,7 @@ const CustomerCreate = () => {
               shop: Yup.string().max(255).required('Shop is required'),
               kyc: Yup.string().max(255).required('KYC is required')
             })}
-            onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+            onSubmit={async (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
               try {
                 setStatus({ success: false });
                 setSubmitting(true);
@@ -117,6 +117,7 @@ const CustomerCreate = () => {
                   setSubmitting(false);
                   console.log('response', response);
                   notify();
+                  resetForm();
                 }
               } catch (err) {
                 console.error(err);
