@@ -3,10 +3,6 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import MainCard from 'components/MainCard';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { setCustomer } from 'store/reducers/customerSlice';
-import { useGetCustomerByIdQuery } from 'store/reducers/customersApi';
 
 import { Button, Divider, Typography, TextField, Grid, InputLabel, OutlinedInput, Stack, Select, MenuItem } from '@mui/material';
 
