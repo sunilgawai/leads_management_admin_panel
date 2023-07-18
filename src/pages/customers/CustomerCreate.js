@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -17,6 +18,8 @@ import { strengthColor, strengthIndicator } from 'utils/password-strength';
 // State Management Inputs.
 import ApiService from 'services/ApiService';
 // import { setAuth } from 'store/reducers/userSlice';
+import { setCustomer } from 'store/reducers/customerSlice';
+import { useDispatch } from 'react-redux';
 
 // Component imports.
 import MainCard from 'components/MainCard';
@@ -25,6 +28,7 @@ import ComponentSkeleton from '../components-overview/ComponentSkeleton';
 const CustomerCreate = () => {
   // eslint-disable-next-line no-unused-vars
   const [level, setLevel] = useState();
+  const dispatch = useDispatch();
 
   const changePassword = (value) => {
     const temp = strengthIndicator(value);
@@ -93,21 +97,31 @@ const CustomerCreate = () => {
               shop: Yup.string().max(255).required('Shop is required'),
               kyc: Yup.string().max(255).required('KYC is required')
             })}
-            onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+            onSubmit={async (values, { setErrors, setStatus, setSubmitting, resetForm }) => {
               try {
-                console.log('values', values);
+                // console.log('values', values);
+                const response = await ApiService.storeCustomer(values);
+                // console.log('response', response);
+                if (response.request.status === 200) {
+                  setStatus({ success: true });
+                  setSubmitting(false);
+                  dispatch(setCustomer(response.data));
+                  // console.log('response', response);
+                  resetForm();
+                  // notify();
+                }
                 setStatus({ success: false });
                 setSubmitting(false);
-              } catch (err) {
-                console.error(err);
+              } catch ({ response }) {
+                console.error('response', response);
                 setStatus({ success: false });
-                setErrors({ submit: err.message });
+                setErrors({ submit: response.data.message });
                 setSubmitting(false);
               }
             }}
           >
-            {({ errors, handleBlur, handleChange, isSubmitting, touched, values }) => (
-              <form noValidate>
+            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+              <form onSubmit={handleSubmit}>
                 <Grid container spacing={3}>
                   <Grid item xs={12} md={6}>
                     <Stack spacing={1}>
@@ -352,29 +366,14 @@ const CustomerCreate = () => {
                       )}
                     </Stack>
                   </Grid>
-                  {error && (
+                  {errors.submit && (
                     <Grid item xs={12}>
-                      <FormHelperText error>{error}</FormHelperText>
+                      <FormHelperText error>{errors.submit}</FormHelperText>
                     </Grid>
                   )}
                   <Grid item xs={12}>
                     <AnimateButton>
                       <Button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          // console.log('values', values);
-                          ApiService.storeCustomer(values)
-                            .then((response) => {
-                              if (response.status === 200) {
-                                const { data } = response;
-                                console.log('stored', data);
-                              }
-                            })
-                            .catch((err) => {
-                              setError(err.response.data.message);
-                              console.log(err);
-                            });
-                        }}
                         disableElevation
                         disabled={isSubmitting}
                         fullWidth

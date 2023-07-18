@@ -29,9 +29,6 @@ import 'react-toastify/dist/ReactToastify.css';
 const CustomerCreate = () => {
   const notify = () => toast('customer updated successfully.');
   const { id } = useParams();
-  // eslint-disable-next-line no-unused-vars
-  const [level, setLevel] = useState();
-  // eslint-disable-next-line no-unused-vars
   const [customer, setCustomer] = useState({});
   useEffect(() => {
     ApiService.viewCustomer(id)

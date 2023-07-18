@@ -21,6 +21,12 @@ const CustomerCreate = Loadable(lazy(() => import('pages/customers/CustomerCreat
 const CustomerUpdate = Loadable(lazy(() => import('pages/customers/CustomerUpdate')));
 const CustomerView = Loadable(lazy(() => import('pages/customers/CustomerView')));
 
+// Dashboard routes.
+const Leads = Loadable(lazy(() => import('pages/customers')));
+const Users = Loadable(lazy(() => import('pages/users')));
+const Orders = Loadable(lazy(() => import('pages/orders')));
+const Quotations = Loadable(lazy(() => import('pages/quotations')));
+const Cms = Loadable(lazy(() => import('pages/cms')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -46,6 +52,26 @@ const MainRoutes = {
     {
       path: '/customer/update/:id',
       element: <CustomerUpdate />
+    },
+    {
+      path: '/users',
+      element: <Users />
+    },
+    {
+      path: '/leads',
+      element: <Leads />
+    },
+    {
+      path: '/orders',
+      element: <Orders />
+    },
+    {
+      path: '/quotations',
+      element: <Quotations />
+    },
+    {
+      path: '/cms',
+      element: <Cms />
     },
     {
       path: 'color',

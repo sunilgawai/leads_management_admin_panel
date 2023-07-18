@@ -28,6 +28,8 @@ import ApiService from 'services/ApiService';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch } from 'react-redux';
+import { removeCustomer } from 'store/reducers/customerSlice';
 
 const getTableDataFormat = (obj) => Object.keys(obj);
 function createData(name, calories, fat, carbs, protein) {
@@ -225,6 +227,7 @@ export default function CustomerTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const customers = useSelector((state) => state.customerSlice.customers);
+  const dispatch = useDispatch();
   // getTableDataFormat(customers[0]);
 
   const handleRequestSort = (event, property) => {
@@ -347,10 +350,11 @@ export default function CustomerTable() {
                         onClick={() => {
                           ApiService.deleteCustomer(customers.id)
                             .then((results) => {
+                              // console.log(results);
                               if (results.status === 200) {
-                                  notify();
+                                dispatch(removeCustomer(customers.id));
+                                notify();
                               }
-                              console.log('Customer deleted', results);
                             })
                             .catch((err) => {
                               console.log('Error', err);

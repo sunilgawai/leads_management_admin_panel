@@ -70,7 +70,7 @@ const CustomersPanel = () => {
 
   const { customers } = useSelector((state) => state.customerSlice);
 
-  if (customers.length === 0) {
+  if (!customers) {
     // Render a loading state or return null until customer data is fetched
     return <Loader />;
   }
