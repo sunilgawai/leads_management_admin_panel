@@ -98,16 +98,16 @@ const AuthRegister = () => {
     <>
       <Formik
         initialValues={{
-          firstname: 'John',
-          lastname: 'Doe',
-          phone: '1234567890',
-          email: 'johndoe69@gmail.com',
+          firstname: '',
+          lastname: '',
+          phone: '',
+          email: '',
           department: '',
           country: '',
           state: '',
           city: '',
-          password: 'john123',
-          repeat_password: 'john123',
+          password: '',
+          repeat_password: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
@@ -123,20 +123,28 @@ const AuthRegister = () => {
           repeat_password: Yup.string().max(255).required('Password is required')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-          try {
-            console.log('values', values);
-            setStatus({ success: false });
-            setSubmitting(false);
-          } catch (err) {
-            console.error(err);
-            setStatus({ success: false });
-            setErrors({ submit: err.message });
-            setSubmitting(false);
-          }
+          ApiService.register(values)
+            .then((response) => {
+              if (response.status === 200) {
+                setStatus({ success: true });
+                setSubmitting(false);
+                const { data } = response;
+                dispatch(setAuth({ data }));
+                navigate('/');
+              }
+              // Setting Errors
+              console.log('res', response);
+            })
+            .catch(({ response }) => {
+              setStatus({ success: false });
+              setErrors({ submit: response.data.message });
+              setSubmitting(false);
+              console.log(response);
+            });
         }}
       >
-        {({ errors, handleBlur, handleChange, isSubmitting, touched, values }) => (
-          <form noValidate>
+        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+          <form onSubmit={handleSubmit} noValidate>
             <Grid container spacing={3}>
               <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
@@ -471,32 +479,7 @@ const AuthRegister = () => {
               )}
               <Grid item xs={12}>
                 <AnimateButton>
-                  <Button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      // handleSubmit();
-                      ApiService.register(values)
-                        .then((response) => {
-                          if (response.status === 200) {
-                            const { data } = response;
-                            dispatch(setAuth({ data }));
-                            navigate('/');
-                          }
-                          // Setting Errors
-                          console.log('res', response);
-                        })
-                        .catch(({ response }) => {
-                          console.log(response);
-                        });
-                    }}
-                    disableElevation
-                    disabled={isSubmitting}
-                    fullWidth
-                    size="large"
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                  >
+                  <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
                     Create Account
                   </Button>
                 </AnimateButton>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 // material-ui
 import { Button, Divider, FormHelperText, Grid, InputLabel, OutlinedInput, Stack, Select, MenuItem } from '@mui/material';
@@ -10,7 +10,6 @@ import { Formik } from 'formik';
 
 // project import
 import AnimateButton from 'components/@extended/AnimateButton';
-import { strengthColor, strengthIndicator } from 'utils/password-strength';
 
 // assets
 
@@ -21,26 +20,35 @@ import ApiService from 'services/ApiService';
 // Component imports.
 import MainCard from 'components/MainCard';
 import ComponentSkeleton from '../components-overview/ComponentSkeleton';
+import Loader from 'components/Loader';
+
+// Notification import.
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CustomerCreate = () => {
+  const notify = () => toast('customer updated successfully.');
+  const { id } = useParams();
   // eslint-disable-next-line no-unused-vars
   const [level, setLevel] = useState();
-
-  const changePassword = (value) => {
-    const temp = strengthIndicator(value);
-    setLevel(strengthColor(temp));
-  };
-
+  // eslint-disable-next-line no-unused-vars
+  const [customer, setCustomer] = useState({});
   useEffect(() => {
-    changePassword('');
-  }, []);
+    ApiService.viewCustomer(id)
+      .then((results) => {
+        // console.log(results.data);
+        setCustomer(results.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [id]);
   // for customer location.
   const [location, setLocation] = useState({
     countries: [],
     states: [],
     cities: []
   });
-  const [departments, setDepartments] = useState([]);
   const [kyc, setKyc] = useState([]);
 
   useEffect(() => {
@@ -51,13 +59,7 @@ const CustomerCreate = () => {
       .catch((err) => {
         console.log(err);
       });
-    ApiService.getDepartments()
-      .then((results) => {
-        setDepartments(results.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+
     ApiService.getCountries()
       .then((results) => {
         setLocation({
@@ -69,6 +71,11 @@ const CustomerCreate = () => {
         console.log(err);
       });
   }, []);
+
+  if (Object.keys(customer).length === 0) {
+    // Render a loading state or return null until customer data is fetched
+    return <Loader />;
+  }
   return (
     <>
       <ComponentSkeleton>
@@ -76,22 +83,19 @@ const CustomerCreate = () => {
           <Button component={Link} sx={{ mb: 2 }} to="/customer" color="success" size="lg" variant="outlined" my={4}>
             Go Back
           </Button>
+          <ToastContainer />
           <Divider sx={{ mb: 2 }} />
-          {/* <Button component={Link} to="create" sx={{ mb: 2 }}>
-            Create New Customer...
-          </Button> */}
           <Formik
             initialValues={{
-              first_name: 'John',
-              last_name: 'Doe',
-              phone: '1234567890',
-              email: 'johndoe69@gmail.com',
-              department: '',
-              country: '',
-              state: '',
-              city: '',
-              shop: 'paradise',
-              kyc: '',
+              first_name: customer.first_name || '',
+              last_name: customer.last_name || '',
+              phone: customer.phone || '',
+              email: customer.email || '',
+              country: customer.country || '',
+              state: customer.state || '',
+              city: customer.city || '',
+              shop: customer.shop || '',
+              kyc: customer.kyc || '',
               submit: null
             }}
             validationSchema={Yup.object().shape({
@@ -99,7 +103,6 @@ const CustomerCreate = () => {
               last_name: Yup.string().max(255).required('Last Name is required'),
               phone: Yup.string().max(12).required('Phone No. is required'),
               email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-              department: Yup.string().max(255).required('Department is required'),
               country: Yup.string().max(255).required('Country is required'),
               state: Yup.string().max(255).required('State is required'),
               city: Yup.string().max(255).required('City is required'),
@@ -108,19 +111,26 @@ const CustomerCreate = () => {
             })}
             onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
               try {
-                console.log('values', values);
                 setStatus({ success: false });
-                setSubmitting(false);
+                setSubmitting(true);
+                const response = await ApiService.updateCustomer({ id, ...values });
+                console.log('response', response);
+                if (response.request.status === 200) {
+                  setStatus({ success: true });
+                  setSubmitting(false);
+                  console.log('response', response);
+                  notify();
+                }
               } catch (err) {
                 console.error(err);
+                setErrors({ submit: response.data.message });
                 setStatus({ success: false });
-                setErrors({ submit: err.message });
                 setSubmitting(false);
               }
             }}
           >
-            {({ errors, handleBlur, handleChange, isSubmitting, touched, values }) => (
-              <form noValidate>
+            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+              <form onSubmit={handleSubmit}>
                 <Grid container spacing={3}>
                   <Grid item xs={12} md={6}>
                     <Stack spacing={1}>
@@ -161,34 +171,6 @@ const CustomerCreate = () => {
                       {touched.last_name && errors.last_name && (
                         <FormHelperText error id="helper-text-last_name-signup">
                           {errors.last_name}
-                        </FormHelperText>
-                      )}
-                    </Stack>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Stack spacing={1}>
-                      <InputLabel id="department-signup">Department</InputLabel>
-                      <Select
-                        fullWidth
-                        labelId="department-signup"
-                        id="department-signup"
-                        type="department"
-                        name="department"
-                        label="Department"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        value={values.department}
-                        error={Boolean(touched.department && errors.department)}
-                      >
-                        {departments.map((dep) => (
-                          <MenuItem key={dep.id} value={dep.id}>
-                            {dep.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      {touched.department && errors.department && (
-                        <FormHelperText error id="helper-text-last_name-signup">
-                          {errors.department}
                         </FormHelperText>
                       )}
                     </Stack>
@@ -401,22 +383,6 @@ const CustomerCreate = () => {
                   <Grid item xs={12}>
                     <AnimateButton>
                       <Button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          console.log('values', values);
-                          ApiService.storeCustomer(values)
-                            .then((response) => {
-                              if (response.status === 200) {
-                                const { data } = response;
-                                console.log('stored', data);
-                              }
-                              // Setting Errors
-                              console.log('res', response);
-                            })
-                            .catch((err) => {
-                              console.log(err);
-                            });
-                        }}
                         disableElevation
                         disabled={isSubmitting}
                         fullWidth

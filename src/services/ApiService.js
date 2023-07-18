@@ -138,6 +138,16 @@ class ApiService {
         })
     }
 
+    static viewCustomer = (id) => {
+        return new Promise((resolve, reject) => {
+            this.apiServer.get(`/api/customer/${id}`).then((response) => {
+                return resolve(response);
+            }).catch((err) => {
+                return reject(err)
+            })
+        })
+    }
+
     static deleteCustomer = (id) => {
         return new Promise((resolve, reject) => {
             this.apiServer.delete(`/api/customer/${id}`).then((response) => {
@@ -148,9 +158,9 @@ class ApiService {
         })
     }
 
-    static updateCustomer = ({ first_name, last_name, country, state, city, email, phone, shop, kyc }) => {
+    static updateCustomer = ({ id, first_name, last_name, country, state, city, email, phone, shop, kyc }) => {
         return new Promise((resolve, reject) => {
-            this.apiServer.update(`/api/customer/${id}`, {
+            this.apiServer.put(`/api/customer/${id}`, {
                 first_name,
                 last_name,
                 country,

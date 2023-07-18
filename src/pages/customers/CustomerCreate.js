@@ -40,20 +40,12 @@ const CustomerCreate = () => {
     states: [],
     cities: []
   });
-  const [departments, setDepartments] = useState([]);
   const [kyc, setKyc] = useState([]);
-
+  const [error, setError] = useState('');
   useEffect(() => {
     ApiService.getKycList()
       .then((results) => {
         setKyc(results.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    ApiService.getDepartments()
-      .then((results) => {
-        setDepartments(results.data);
       })
       .catch((err) => {
         console.log(err);
@@ -77,20 +69,16 @@ const CustomerCreate = () => {
             Go Back
           </Button>
           <Divider sx={{ mb: 2 }} />
-          {/* <Button component={Link} to="create" sx={{ mb: 2 }}>
-            Create New Customer...
-          </Button> */}
           <Formik
             initialValues={{
-              first_name: 'John',
-              last_name: 'Doe',
-              phone: '1234567890',
-              email: 'johndoe69@gmail.com',
-              department: '',
+              first_name: '',
+              last_name: '',
+              phone: '',
+              email: '',
               country: '',
               state: '',
               city: '',
-              shop: 'paradise',
+              shop: '',
               kyc: '',
               submit: null
             }}
@@ -99,7 +87,6 @@ const CustomerCreate = () => {
               last_name: Yup.string().max(255).required('Last Name is required'),
               phone: Yup.string().max(12).required('Phone No. is required'),
               email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-              department: Yup.string().max(255).required('Department is required'),
               country: Yup.string().max(255).required('Country is required'),
               state: Yup.string().max(255).required('State is required'),
               city: Yup.string().max(255).required('City is required'),
@@ -161,34 +148,6 @@ const CustomerCreate = () => {
                       {touched.last_name && errors.last_name && (
                         <FormHelperText error id="helper-text-last_name-signup">
                           {errors.last_name}
-                        </FormHelperText>
-                      )}
-                    </Stack>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Stack spacing={1}>
-                      <InputLabel id="department-signup">Department</InputLabel>
-                      <Select
-                        fullWidth
-                        labelId="department-signup"
-                        id="department-signup"
-                        type="department"
-                        name="department"
-                        label="Department"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        value={values.department}
-                        error={Boolean(touched.department && errors.department)}
-                      >
-                        {departments.map((dep) => (
-                          <MenuItem key={dep.id} value={dep.id}>
-                            {dep.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      {touched.department && errors.department && (
-                        <FormHelperText error id="helper-text-last_name-signup">
-                          {errors.department}
                         </FormHelperText>
                       )}
                     </Stack>
@@ -393,9 +352,9 @@ const CustomerCreate = () => {
                       )}
                     </Stack>
                   </Grid>
-                  {errors.submit && (
+                  {error && (
                     <Grid item xs={12}>
-                      <FormHelperText error>{errors.submit}</FormHelperText>
+                      <FormHelperText error>{error}</FormHelperText>
                     </Grid>
                   )}
                   <Grid item xs={12}>
@@ -403,17 +362,16 @@ const CustomerCreate = () => {
                       <Button
                         onClick={(e) => {
                           e.preventDefault();
-                          console.log('values', values);
+                          // console.log('values', values);
                           ApiService.storeCustomer(values)
                             .then((response) => {
                               if (response.status === 200) {
                                 const { data } = response;
                                 console.log('stored', data);
                               }
-                              // Setting Errors
-                              console.log('res', response);
                             })
                             .catch((err) => {
+                              setError(err.response.data.message);
                               console.log(err);
                             });
                         }}

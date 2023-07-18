@@ -26,6 +26,9 @@ import { DeleteOutlined, FilterOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import ApiService from 'services/ApiService';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const getTableDataFormat = (obj) => Object.keys(obj);
 function createData(name, calories, fat, carbs, protein) {
   return {
@@ -281,9 +284,11 @@ export default function CustomerTable() {
     [order, orderBy, page, rowsPerPage]
   );
 
+  const notify = () => toast('Customer Deleted.');
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
+        <ToastContainer />
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
@@ -342,6 +347,9 @@ export default function CustomerTable() {
                         onClick={() => {
                           ApiService.deleteCustomer(customers.id)
                             .then((results) => {
+                              if (results.status === 200) {
+                                  notify();
+                              }
                               console.log('Customer deleted', results);
                             })
                             .catch((err) => {

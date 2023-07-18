@@ -8,8 +8,9 @@ import { Box, Card, Grid, Stack, Typography, Button } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ComponentSkeleton from '../components-overview/ComponentSkeleton';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchCustomers } from 'store/reducers/customerSlice';
+import Loader from 'components/Loader';
 
 // ===============================|| COLOR BOX ||=============================== //
 
@@ -66,6 +67,13 @@ const CustomersPanel = () => {
   useEffect(() => {
     dispatch(fetchCustomers());
   }, []);
+
+  const { customers } = useSelector((state) => state.customerSlice);
+
+  if (customers.length === 0) {
+    // Render a loading state or return null until customer data is fetched
+    return <Loader />;
+  }
   return (
     <>
       <ComponentSkeleton>
