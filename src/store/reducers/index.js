@@ -5,10 +5,10 @@ import { combineReducers } from 'redux';
 import menu from './menu';
 import userSlice from './userSlice';
 import customerSlice from './customerSlice';
-import { customersApi } from 'store/reducers/customersApi';
+// import { customersApi } from 'store/reducers/customersApi'; , [customersApi.reducerPath]: customersApi.reducer
 
 // ==============================|| COMBINE REDUCERS ||============================== //
 
-const reducers = combineReducers({ menu, userSlice, customerSlice, [customersApi.reducerPath]: customersApi.reducer });
+const reducers = combineReducers({ menu, userSlice, customerSlice });
 
 export default reducers;
